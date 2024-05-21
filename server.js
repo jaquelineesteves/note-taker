@@ -60,6 +60,11 @@ app.post('/api/notes', (req, res) => {
         res.status(201).json(newNote);
       });
     });
+    const response = {
+      status: 'success',
+      body: newNote,
+    };
+
   } else {
     res.status(400).json('Error in posting note');
   }
