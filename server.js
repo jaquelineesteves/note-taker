@@ -49,11 +49,11 @@ app.post('/api/notes', (req, res) => {
         return res.status(500).json('Error reading file'); 
       }
 
-      const notesto = JSON.parse(data);
-      notesto.push(newNote);
+      const notesTo = JSON.parse(data);
+      notesTo.push(newNote);
 
       // Write the updated notes back to the file
-      fs.writeFile('./db/db.json', JSON.stringify(notesto, null, 4), (err) => {
+      fs.writeFile('./db/db.json', JSON.stringify(notesTo, null, 4), (err) => {
         if (err) {
           console.error(err);
           return res.status(500).json('Error writing file');
@@ -61,21 +61,17 @@ app.post('/api/notes', (req, res) => {
         res.status(201).json(newNote);
       });
     });
-    const response = {
-      status: 'success',
-      body: newNote,
-    };
+
 
   } else {
     res.status(400).json('Error in posting note');
   }
 });
 
-app.delete('/api/notes:id', 
-    (req, res) => { 
-        res.send("DELETE Request Called");
-        res.redirect('/notes')
-    });
+// app.delete('/api/notes:id', (req, res) => { 
+//   const noteId = req.params.id;
+
+// });
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
