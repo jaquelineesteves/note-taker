@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
+const uuid = require('./helpers/uuid');
 
 const PORT = process.env.PORT || 3001;
 
@@ -30,29 +30,30 @@ app.get('/api/notes', (req, res) => {
   });
 });
 
+
 app.post('/api/notes', (req, res) => {
-  const { title, text } = req.body;
+  const {title, text} = req.body;
 
   if (title && text) {
     // Create a new note object with a unique ID
     const newNote = {
       title,
       text,
-      id: uuidv4,
+      id: uuid(),
     };
 
     // Read the existing notes from the file
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
       if (err) {
         console.error(err);
-        return res.status(500).json('Error reading file');
+        return res.status(500).json('Error reading file'); 
       }
 
-      const notes = JSON.parse(data);
-      notes.push(newNote);
+      const notesto = JSON.parse(data);
+      notesto.push(newNote);
 
       // Write the updated notes back to the file
-      fs.writeFile('./db/db.json', JSON.stringify(notes, null, 2), (err) => {
+      fs.writeFile('./db/db.json', JSON.stringify(notesto, null, 4), (err) => {
         if (err) {
           console.error(err);
           return res.status(500).json('Error writing file');
@@ -70,6 +71,11 @@ app.post('/api/notes', (req, res) => {
   }
 });
 
+app.delete('/api/notes:id', 
+    (req, res) => { 
+        res.send("DELETE Request Called");
+        res.redirect('/notes')
+    });
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
